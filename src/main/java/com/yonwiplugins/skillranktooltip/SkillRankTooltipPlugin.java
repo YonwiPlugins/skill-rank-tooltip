@@ -255,9 +255,7 @@ public class SkillRankTooltipPlugin extends Plugin
 			case CURRENT_MODE:
 				return true;
 			case OVERALL:
-				return accountType == 1 || accountType == 2 || accountType == 3;
-			case IRONMAN:
-				return accountType == 2 || accountType == 3;
+				return true;
 			default:
 				return false;
 		}
@@ -282,8 +280,6 @@ public class SkillRankTooltipPlugin extends Plugin
 		{
 			case OVERALL:
 				return HiscoreEndpoint.NORMAL;
-			case IRONMAN:
-				return HiscoreEndpoint.IRONMAN;
 			case CURRENT_MODE:
 			default:
 				break;

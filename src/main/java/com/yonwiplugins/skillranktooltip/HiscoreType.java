@@ -3,7 +3,6 @@ package com.yonwiplugins.skillranktooltip;
 public enum HiscoreType
 {
 	CURRENT_MODE("Main"),
-	IRONMAN("Ironman"),
 	OVERALL("All players");
 
 	private final String displayName;

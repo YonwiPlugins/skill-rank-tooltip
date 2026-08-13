@@ -12,7 +12,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "hiscoreType",
 		name = "Rank category",
-		description = "Use this character's account mode or a broader eligible rank category",
+		description = "Use this character's account mode or all-player rankings",
 		position = 0
 	)
 	default HiscoreType hiscoreType()

@@ -8,7 +8,7 @@ A RuneLite Plugin Hub plugin that adds your Old School RuneScape hiscore rank to
 - Shows overall rank when hovering Total level.
 - Displays `Unranked` when the hiscores do not provide a rank.
 - Uses the current account's matching hiscores automatically.
-- Shows the detected account mode by name and lets eligible accounts use broader Ironman or all-player ranks.
+- Shows the detected account mode by name and lets players switch to all-player ranks.
 - Provides one open "Show ranks for:" list with an enabled-by-default checkbox for every skill and Total level.
 - Supports normal, seasonal, tournament, Deadman, and Fresh Start worlds through RuneLite's built-in hiscore client.
 

@@ -114,14 +114,14 @@ public class SkillRankTooltipTextTest
 	}
 
 	@Test
-	public void selectsValidRankCategories()
+	public void selectsAllPlayerRankCategory()
 	{
 		assertEquals(HiscoreEndpoint.NORMAL,
 			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 1, HiscoreType.OVERALL));
-		assertEquals(HiscoreEndpoint.IRONMAN,
-			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 2, HiscoreType.IRONMAN));
-		assertEquals(HiscoreEndpoint.IRONMAN,
-			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 3, HiscoreType.IRONMAN));
+		assertEquals(HiscoreEndpoint.NORMAL,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 2, HiscoreType.OVERALL));
+		assertEquals(HiscoreEndpoint.NORMAL,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 3, HiscoreType.OVERALL));
 	}
 
 	@Test
@@ -132,12 +132,10 @@ public class SkillRankTooltipTextTest
 		assertEquals(HiscoreEndpoint.HARDCORE_IRONMAN,
 			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 3, HiscoreType.CURRENT_MODE));
 
-		assertEquals(false, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.IRONMAN, 0));
-		assertEquals(false, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.IRONMAN, 1));
-		assertEquals(false, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.OVERALL, 0));
+		assertEquals(true, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.OVERALL, 0));
 		assertEquals(true, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.OVERALL, 1));
-		assertEquals(true, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.IRONMAN, 2));
-		assertEquals(true, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.IRONMAN, 3));
+		assertEquals(true, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.OVERALL, 2));
+		assertEquals(true, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.OVERALL, 3));
 	}
 
 	@Test
