@@ -4,37 +4,36 @@ import net.runelite.api.Skill;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.ConfigSection;
 
 @ConfigGroup("skill-rank-tooltip")
 public interface SkillRankTooltipConfig extends Config
 {
 	@ConfigItem(
-		keyName = "showRanks",
-		name = "Show ranks",
-		description = "Add rank rows to skill tooltips",
-		position = 0
-	)
-	default boolean showRanks()
-	{
-		return true;
-	}
-
-	@ConfigItem(
 		keyName = "hiscoreType",
 		name = "Rank category",
 		description = "Your mode automatically uses this character's Main, Ironman, UIM, or HCIM hiscores",
-		position = 1
+		position = 0
 	)
 	default HiscoreType hiscoreType()
 	{
 		return HiscoreType.CURRENT_MODE;
 	}
 
+	@ConfigSection(
+		name = "Show ranks for:",
+		description = "Choose which skill tooltips show a rank",
+		position = 1,
+		closedByDefault = false
+	)
+	String skillsSection = "skills";
+
 	@ConfigItem(
 		keyName = "showTotalLevel",
-		name = "Show rank for Total level",
+		name = "Total level",
 		description = "Add the overall rank when hovering Total level",
-		position = 10
+		position = 10,
+		section = skillsSection
 	)
 	default boolean showTotalLevel()
 	{
@@ -43,9 +42,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showAttack",
-		name = "Show rank for Attack",
+		name = "Attack",
 		description = "Add a rank when hovering Attack",
-		position = 11
+		position = 11,
+		section = skillsSection
 	)
 	default boolean showAttack()
 	{
@@ -54,9 +54,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showDefence",
-		name = "Show rank for Defence",
+		name = "Defence",
 		description = "Add a rank when hovering Defence",
-		position = 12
+		position = 12,
+		section = skillsSection
 	)
 	default boolean showDefence()
 	{
@@ -65,9 +66,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showStrength",
-		name = "Show rank for Strength",
+		name = "Strength",
 		description = "Add a rank when hovering Strength",
-		position = 13
+		position = 13,
+		section = skillsSection
 	)
 	default boolean showStrength()
 	{
@@ -76,9 +78,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showHitpoints",
-		name = "Show rank for Hitpoints",
+		name = "Hitpoints",
 		description = "Add a rank when hovering Hitpoints",
-		position = 14
+		position = 14,
+		section = skillsSection
 	)
 	default boolean showHitpoints()
 	{
@@ -87,9 +90,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showRanged",
-		name = "Show rank for Ranged",
+		name = "Ranged",
 		description = "Add a rank when hovering Ranged",
-		position = 15
+		position = 15,
+		section = skillsSection
 	)
 	default boolean showRanged()
 	{
@@ -98,9 +102,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showPrayer",
-		name = "Show rank for Prayer",
+		name = "Prayer",
 		description = "Add a rank when hovering Prayer",
-		position = 16
+		position = 16,
+		section = skillsSection
 	)
 	default boolean showPrayer()
 	{
@@ -109,9 +114,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showMagic",
-		name = "Show rank for Magic",
+		name = "Magic",
 		description = "Add a rank when hovering Magic",
-		position = 17
+		position = 17,
+		section = skillsSection
 	)
 	default boolean showMagic()
 	{
@@ -120,9 +126,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showCooking",
-		name = "Show rank for Cooking",
+		name = "Cooking",
 		description = "Add a rank when hovering Cooking",
-		position = 18
+		position = 18,
+		section = skillsSection
 	)
 	default boolean showCooking()
 	{
@@ -131,9 +138,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showWoodcutting",
-		name = "Show rank for Woodcutting",
+		name = "Woodcutting",
 		description = "Add a rank when hovering Woodcutting",
-		position = 19
+		position = 19,
+		section = skillsSection
 	)
 	default boolean showWoodcutting()
 	{
@@ -142,9 +150,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showFletching",
-		name = "Show rank for Fletching",
+		name = "Fletching",
 		description = "Add a rank when hovering Fletching",
-		position = 20
+		position = 20,
+		section = skillsSection
 	)
 	default boolean showFletching()
 	{
@@ -153,9 +162,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showFishing",
-		name = "Show rank for Fishing",
+		name = "Fishing",
 		description = "Add a rank when hovering Fishing",
-		position = 21
+		position = 21,
+		section = skillsSection
 	)
 	default boolean showFishing()
 	{
@@ -164,9 +174,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showFiremaking",
-		name = "Show rank for Firemaking",
+		name = "Firemaking",
 		description = "Add a rank when hovering Firemaking",
-		position = 22
+		position = 22,
+		section = skillsSection
 	)
 	default boolean showFiremaking()
 	{
@@ -175,9 +186,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showCrafting",
-		name = "Show rank for Crafting",
+		name = "Crafting",
 		description = "Add a rank when hovering Crafting",
-		position = 23
+		position = 23,
+		section = skillsSection
 	)
 	default boolean showCrafting()
 	{
@@ -186,9 +198,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showSmithing",
-		name = "Show rank for Smithing",
+		name = "Smithing",
 		description = "Add a rank when hovering Smithing",
-		position = 24
+		position = 24,
+		section = skillsSection
 	)
 	default boolean showSmithing()
 	{
@@ -197,9 +210,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showMining",
-		name = "Show rank for Mining",
+		name = "Mining",
 		description = "Add a rank when hovering Mining",
-		position = 25
+		position = 25,
+		section = skillsSection
 	)
 	default boolean showMining()
 	{
@@ -208,9 +222,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showHerblore",
-		name = "Show rank for Herblore",
+		name = "Herblore",
 		description = "Add a rank when hovering Herblore",
-		position = 26
+		position = 26,
+		section = skillsSection
 	)
 	default boolean showHerblore()
 	{
@@ -219,9 +234,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showAgility",
-		name = "Show rank for Agility",
+		name = "Agility",
 		description = "Add a rank when hovering Agility",
-		position = 27
+		position = 27,
+		section = skillsSection
 	)
 	default boolean showAgility()
 	{
@@ -230,9 +246,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showThieving",
-		name = "Show rank for Thieving",
+		name = "Thieving",
 		description = "Add a rank when hovering Thieving",
-		position = 28
+		position = 28,
+		section = skillsSection
 	)
 	default boolean showThieving()
 	{
@@ -241,9 +258,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showSlayer",
-		name = "Show rank for Slayer",
+		name = "Slayer",
 		description = "Add a rank when hovering Slayer",
-		position = 29
+		position = 29,
+		section = skillsSection
 	)
 	default boolean showSlayer()
 	{
@@ -252,9 +270,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showFarming",
-		name = "Show rank for Farming",
+		name = "Farming",
 		description = "Add a rank when hovering Farming",
-		position = 30
+		position = 30,
+		section = skillsSection
 	)
 	default boolean showFarming()
 	{
@@ -263,9 +282,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showRunecraft",
-		name = "Show rank for Runecraft",
+		name = "Runecraft",
 		description = "Add a rank when hovering Runecraft",
-		position = 31
+		position = 31,
+		section = skillsSection
 	)
 	default boolean showRunecraft()
 	{
@@ -274,9 +294,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showHunter",
-		name = "Show rank for Hunter",
+		name = "Hunter",
 		description = "Add a rank when hovering Hunter",
-		position = 32
+		position = 32,
+		section = skillsSection
 	)
 	default boolean showHunter()
 	{
@@ -285,9 +306,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showConstruction",
-		name = "Show rank for Construction",
+		name = "Construction",
 		description = "Add a rank when hovering Construction",
-		position = 33
+		position = 33,
+		section = skillsSection
 	)
 	default boolean showConstruction()
 	{
@@ -296,9 +318,10 @@ public interface SkillRankTooltipConfig extends Config
 
 	@ConfigItem(
 		keyName = "showSailing",
-		name = "Show rank for Sailing",
+		name = "Sailing",
 		description = "Add a rank when hovering Sailing",
-		position = 34
+		position = 34,
+		section = skillsSection
 	)
 	default boolean showSailing()
 	{

@@ -63,10 +63,7 @@ public class SkillRankTooltipPlugin extends Plugin
 	protected void startUp()
 	{
 		resetLookup();
-		if (config.showRanks())
-		{
-			requestHiscores();
-		}
+		requestHiscores();
 	}
 
 	@Override
@@ -86,10 +83,7 @@ public class SkillRankTooltipPlugin extends Plugin
 	{
 		if (event.getGameState() == GameState.LOGGED_IN)
 		{
-			if (config.showRanks())
-			{
-				requestHiscores();
-			}
+			requestHiscores();
 		}
 		else if (event.getGameState() == GameState.LOGIN_SCREEN
 			|| event.getGameState() == GameState.HOPPING)
@@ -101,8 +95,7 @@ public class SkillRankTooltipPlugin extends Plugin
 	@Subscribe
 	public void onGameTick(GameTick event)
 	{
-		if (config.showRanks()
-			&& client.getGameState() == GameState.LOGGED_IN
+		if (client.getGameState() == GameState.LOGGED_IN
 			&& lookupUsername == null)
 		{
 			requestHiscores();
@@ -131,27 +124,18 @@ public class SkillRankTooltipPlugin extends Plugin
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event)
 	{
-		if (!CONFIG_GROUP.equals(event.getGroup())
-			|| (!"showRanks".equals(event.getKey()) && !"hiscoreType".equals(event.getKey())))
+		if (!CONFIG_GROUP.equals(event.getGroup()) || !"hiscoreType".equals(event.getKey()))
 		{
 			return;
 		}
 
 		resetLookup();
-		if (config.showRanks())
-		{
-			requestHiscores();
-		}
+		requestHiscores();
 	}
 
 	@Subscribe
 	public void onScriptPostFired(ScriptPostFired event)
 	{
-		if (!config.showRanks())
-		{
-			return;
-		}
-
 		HiscoreResult result = hiscoreResult;
 		if (result == null)
 		{
@@ -199,8 +183,7 @@ public class SkillRankTooltipPlugin extends Plugin
 
 	private void requestHiscores()
 	{
-		if (!config.showRanks()
-			|| client.getGameState() != GameState.LOGGED_IN
+		if (client.getGameState() != GameState.LOGGED_IN
 			|| lookupUsername != null)
 		{
 			return;
