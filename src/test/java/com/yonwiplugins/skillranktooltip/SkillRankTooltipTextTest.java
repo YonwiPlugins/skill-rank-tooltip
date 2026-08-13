@@ -1,8 +1,6 @@
 package com.yonwiplugins.skillranktooltip;
 
-import java.util.Collections;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.Map;
 import net.runelite.api.Skill;
 import net.runelite.client.hiscore.HiscoreResult;
@@ -88,38 +86,78 @@ public class SkillRankTooltipTextTest
 	}
 
 	@Test
-	public void selectsCurrentAccountHiscoresOnNormalWorlds()
+	public void selectsCurrentModeHiscoresOnNormalWorlds()
 	{
 		assertEquals(HiscoreEndpoint.NORMAL,
-			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 0));
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 0, HiscoreType.CURRENT_MODE));
 		assertEquals(HiscoreEndpoint.IRONMAN,
-			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 1));
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 1, HiscoreType.CURRENT_MODE));
 		assertEquals(HiscoreEndpoint.ULTIMATE_IRONMAN,
-			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 2));
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 2, HiscoreType.CURRENT_MODE));
 		assertEquals(HiscoreEndpoint.HARDCORE_IRONMAN,
-			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 3));
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 3, HiscoreType.CURRENT_MODE));
 		assertEquals(HiscoreEndpoint.NORMAL,
-			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 4));
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 4, HiscoreType.CURRENT_MODE));
+	}
+
+	@Test
+	public void selectsValidRankCategories()
+	{
+		assertEquals(HiscoreEndpoint.NORMAL,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 1, HiscoreType.OVERALL));
+		assertEquals(HiscoreEndpoint.IRONMAN,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 2, HiscoreType.IRONMAN));
+		assertEquals(HiscoreEndpoint.IRONMAN,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 3, HiscoreType.IRONMAN));
+	}
+
+	@Test
+	public void rejectsRankCategoriesForOtherAccountTypes()
+	{
+		assertEquals(HiscoreEndpoint.NORMAL,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 0, HiscoreType.OVERALL));
+		assertEquals(HiscoreEndpoint.HARDCORE_IRONMAN,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 3, HiscoreType.CURRENT_MODE));
+
+		assertEquals(false, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.IRONMAN, 0));
+		assertEquals(false, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.IRONMAN, 1));
+		assertEquals(false, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.OVERALL, 0));
+		assertEquals(true, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.OVERALL, 1));
+		assertEquals(true, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.IRONMAN, 2));
+		assertEquals(true, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.IRONMAN, 3));
 	}
 
 	@Test
 	public void keepsWorldSpecificHiscores()
 	{
 		assertEquals(HiscoreEndpoint.SEASONAL,
-			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.SEASONAL, 3));
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.SEASONAL, 3, HiscoreType.OVERALL));
 	}
 
 	@Test
-	public void hidesSelectedSkillsButKeepsTotal()
+	public void supportsPerSkillAndTotalCheckboxes()
 	{
+		SkillRankTooltipConfig config = new SkillRankTooltipConfig()
+		{
+			@Override
+			public boolean showAttack()
+			{
+				return false;
+			}
+
+			@Override
+			public boolean showTotalLevel()
+			{
+				return false;
+			}
+		};
+
+		assertEquals(true, SkillRankTooltipPlugin.shouldShowRankForTooltip(
+			"Ranged XP:", config));
 		assertEquals(false, SkillRankTooltipPlugin.shouldShowRankForTooltip(
-			"Attack XP:", EnumSet.of(Skill.ATTACK)));
-		assertEquals(true, SkillRankTooltipPlugin.shouldShowRankForTooltip(
-			"Ranged XP:", EnumSet.of(Skill.ATTACK)));
-		assertEquals(true, SkillRankTooltipPlugin.shouldShowRankForTooltip(
-			"Total level:<br>Total XP:", EnumSet.allOf(Skill.class)));
-		assertEquals(true, SkillRankTooltipPlugin.shouldShowRankForTooltip(
-			"Magic XP:", Collections.emptySet()));
+			"Attack XP:", config));
+		assertEquals(false, SkillRankTooltipPlugin.shouldShowRankForTooltip(
+			"Total level:<br>Total XP:", config));
 	}
 
 	@Test

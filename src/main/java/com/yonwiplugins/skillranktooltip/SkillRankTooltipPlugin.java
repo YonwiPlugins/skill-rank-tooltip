@@ -2,7 +2,6 @@ package com.yonwiplugins.skillranktooltip;
 
 import com.google.inject.Provides;
 import java.util.Locale;
-import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -52,6 +51,9 @@ public class SkillRankTooltipPlugin extends Plugin
 
 	@Inject
 	private SkillRankTooltipConfig config;
+
+	@Inject
+	private ConfigManager configManager;
 
 	private volatile HiscoreResult hiscoreResult;
 	private volatile String lookupUsername;
@@ -117,7 +119,8 @@ public class SkillRankTooltipPlugin extends Plugin
 
 		HiscoreEndpoint endpoint = resolveHiscoreEndpoint(
 			HiscoreEndpoint.fromWorldTypes(client.getWorldType()),
-			client.getVarbitValue(VarbitID.IRONMAN));
+			client.getVarbitValue(VarbitID.IRONMAN),
+			getSelectedHiscoreType(client.getVarbitValue(VarbitID.IRONMAN)));
 		if (endpoint != lookupEndpoint)
 		{
 			resetLookup();
@@ -128,7 +131,8 @@ public class SkillRankTooltipPlugin extends Plugin
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event)
 	{
-		if (!CONFIG_GROUP.equals(event.getGroup()) || !"showRanks".equals(event.getKey()))
+		if (!CONFIG_GROUP.equals(event.getGroup())
+			|| (!"showRanks".equals(event.getKey()) && !"hiscoreType".equals(event.getKey())))
 		{
 			return;
 		}
@@ -173,7 +177,7 @@ public class SkillRankTooltipPlugin extends Plugin
 			return;
 		}
 
-		if (!shouldShowRankForTooltip(labelWidget.getText(), config.hiddenSkills()))
+		if (!shouldShowRankForTooltip(labelWidget.getText(), config))
 		{
 			return;
 		}
@@ -209,9 +213,11 @@ public class SkillRankTooltipPlugin extends Plugin
 			return;
 		}
 
+		int accountType = client.getVarbitValue(VarbitID.IRONMAN);
 		HiscoreEndpoint endpoint = resolveHiscoreEndpoint(
 			HiscoreEndpoint.fromWorldTypes(client.getWorldType()),
-			client.getVarbitValue(VarbitID.IRONMAN));
+			accountType,
+			getSelectedHiscoreType(accountType));
 		lookupUsername = username;
 		lookupEndpoint = endpoint;
 		hiscoreClient.lookupAsync(username, endpoint).whenComplete((result, error) ->
@@ -246,11 +252,57 @@ public class SkillRankTooltipPlugin extends Plugin
 		hiscoreResult = null;
 	}
 
-	static HiscoreEndpoint resolveHiscoreEndpoint(HiscoreEndpoint worldEndpoint, int accountType)
+	private HiscoreType getSelectedHiscoreType(int accountType)
+	{
+		HiscoreType selected = config.hiscoreType();
+		if (isHiscoreTypeAvailable(selected, accountType))
+		{
+			return selected;
+		}
+
+		configManager.setConfiguration(CONFIG_GROUP, "hiscoreType", HiscoreType.CURRENT_MODE);
+		return HiscoreType.CURRENT_MODE;
+	}
+
+	static boolean isHiscoreTypeAvailable(HiscoreType hiscoreType, int accountType)
+	{
+		switch (hiscoreType)
+		{
+			case CURRENT_MODE:
+				return true;
+			case OVERALL:
+				return accountType == 1 || accountType == 2 || accountType == 3;
+			case IRONMAN:
+				return accountType == 2 || accountType == 3;
+			default:
+				return false;
+		}
+	}
+
+	static HiscoreEndpoint resolveHiscoreEndpoint(
+		HiscoreEndpoint worldEndpoint,
+		int accountType,
+		HiscoreType hiscoreType)
 	{
 		if (worldEndpoint != HiscoreEndpoint.NORMAL)
 		{
 			return worldEndpoint;
+		}
+
+		if (!isHiscoreTypeAvailable(hiscoreType, accountType))
+		{
+			hiscoreType = HiscoreType.CURRENT_MODE;
+		}
+
+		switch (hiscoreType)
+		{
+			case OVERALL:
+				return HiscoreEndpoint.NORMAL;
+			case IRONMAN:
+				return HiscoreEndpoint.IRONMAN;
+			case CURRENT_MODE:
+			default:
+				break;
 		}
 
 		switch (accountType)
@@ -262,20 +314,20 @@ public class SkillRankTooltipPlugin extends Plugin
 			case 3:
 				return HiscoreEndpoint.HARDCORE_IRONMAN;
 			default:
-				// Jagex does not provide separate Group Ironman hiscores.
+				// Jagex does not provide separate individual Group Ironman hiscores.
 				return HiscoreEndpoint.NORMAL;
 		}
 	}
 
-	static boolean shouldShowRankForTooltip(String labelText, Set<Skill> hiddenSkills)
+	static boolean shouldShowRankForTooltip(String labelText, SkillRankTooltipConfig config)
 	{
 		if (isTotalTooltip(labelText))
 		{
-			return true;
+			return config.showTotalLevel();
 		}
 
 		Skill skill = identifySkillFromTooltip(labelText);
-		return skill != null && (hiddenSkills == null || !hiddenSkills.contains(skill));
+		return skill != null && SkillRankTooltipConfig.showRankFor(config, skill);
 	}
 
 	@SuppressWarnings("deprecation")
