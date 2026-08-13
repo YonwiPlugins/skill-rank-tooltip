@@ -31,7 +31,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showTotalLevel",
 		name = "Total level",
-		description = "Add the overall rank when hovering Total level",
+		description = "",
 		position = 10,
 		section = skillsSection
 	)
@@ -43,7 +43,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showAttack",
 		name = "Attack",
-		description = "Add a rank when hovering Attack",
+		description = "",
 		position = 11,
 		section = skillsSection
 	)
@@ -55,7 +55,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showDefence",
 		name = "Defence",
-		description = "Add a rank when hovering Defence",
+		description = "",
 		position = 12,
 		section = skillsSection
 	)
@@ -67,7 +67,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showStrength",
 		name = "Strength",
-		description = "Add a rank when hovering Strength",
+		description = "",
 		position = 13,
 		section = skillsSection
 	)
@@ -79,7 +79,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showHitpoints",
 		name = "Hitpoints",
-		description = "Add a rank when hovering Hitpoints",
+		description = "",
 		position = 14,
 		section = skillsSection
 	)
@@ -91,7 +91,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showRanged",
 		name = "Ranged",
-		description = "Add a rank when hovering Ranged",
+		description = "",
 		position = 15,
 		section = skillsSection
 	)
@@ -103,7 +103,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showPrayer",
 		name = "Prayer",
-		description = "Add a rank when hovering Prayer",
+		description = "",
 		position = 16,
 		section = skillsSection
 	)
@@ -115,7 +115,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showMagic",
 		name = "Magic",
-		description = "Add a rank when hovering Magic",
+		description = "",
 		position = 17,
 		section = skillsSection
 	)
@@ -127,7 +127,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showCooking",
 		name = "Cooking",
-		description = "Add a rank when hovering Cooking",
+		description = "",
 		position = 18,
 		section = skillsSection
 	)
@@ -139,7 +139,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showWoodcutting",
 		name = "Woodcutting",
-		description = "Add a rank when hovering Woodcutting",
+		description = "",
 		position = 19,
 		section = skillsSection
 	)
@@ -151,7 +151,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showFletching",
 		name = "Fletching",
-		description = "Add a rank when hovering Fletching",
+		description = "",
 		position = 20,
 		section = skillsSection
 	)
@@ -163,7 +163,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showFishing",
 		name = "Fishing",
-		description = "Add a rank when hovering Fishing",
+		description = "",
 		position = 21,
 		section = skillsSection
 	)
@@ -175,7 +175,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showFiremaking",
 		name = "Firemaking",
-		description = "Add a rank when hovering Firemaking",
+		description = "",
 		position = 22,
 		section = skillsSection
 	)
@@ -187,7 +187,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showCrafting",
 		name = "Crafting",
-		description = "Add a rank when hovering Crafting",
+		description = "",
 		position = 23,
 		section = skillsSection
 	)
@@ -199,7 +199,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showSmithing",
 		name = "Smithing",
-		description = "Add a rank when hovering Smithing",
+		description = "",
 		position = 24,
 		section = skillsSection
 	)
@@ -211,7 +211,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showMining",
 		name = "Mining",
-		description = "Add a rank when hovering Mining",
+		description = "",
 		position = 25,
 		section = skillsSection
 	)
@@ -223,7 +223,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showHerblore",
 		name = "Herblore",
-		description = "Add a rank when hovering Herblore",
+		description = "",
 		position = 26,
 		section = skillsSection
 	)
@@ -235,7 +235,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showAgility",
 		name = "Agility",
-		description = "Add a rank when hovering Agility",
+		description = "",
 		position = 27,
 		section = skillsSection
 	)
@@ -247,7 +247,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showThieving",
 		name = "Thieving",
-		description = "Add a rank when hovering Thieving",
+		description = "",
 		position = 28,
 		section = skillsSection
 	)
@@ -259,7 +259,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showSlayer",
 		name = "Slayer",
-		description = "Add a rank when hovering Slayer",
+		description = "",
 		position = 29,
 		section = skillsSection
 	)
@@ -271,7 +271,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showFarming",
 		name = "Farming",
-		description = "Add a rank when hovering Farming",
+		description = "",
 		position = 30,
 		section = skillsSection
 	)
@@ -283,7 +283,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showRunecraft",
 		name = "Runecraft",
-		description = "Add a rank when hovering Runecraft",
+		description = "",
 		position = 31,
 		section = skillsSection
 	)
@@ -295,7 +295,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showHunter",
 		name = "Hunter",
-		description = "Add a rank when hovering Hunter",
+		description = "",
 		position = 32,
 		section = skillsSection
 	)
@@ -307,7 +307,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showConstruction",
 		name = "Construction",
-		description = "Add a rank when hovering Construction",
+		description = "",
 		position = 33,
 		section = skillsSection
 	)
@@ -319,7 +319,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showSailing",
 		name = "Sailing",
-		description = "Add a rank when hovering Sailing",
+		description = "",
 		position = 34,
 		section = skillsSection
 	)
