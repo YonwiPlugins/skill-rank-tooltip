@@ -86,6 +86,19 @@ public class SkillRankTooltipTextTest
 	}
 
 	@Test
+	public void namesTheDetectedAccountMode()
+	{
+		HiscoreType.setCurrentMode(0);
+		assertEquals("Main", HiscoreType.CURRENT_MODE.toString());
+		HiscoreType.setCurrentMode(1);
+		assertEquals("Ironman", HiscoreType.CURRENT_MODE.toString());
+		HiscoreType.setCurrentMode(2);
+		assertEquals("Ultimate Ironman", HiscoreType.CURRENT_MODE.toString());
+		HiscoreType.setCurrentMode(3);
+		assertEquals("Hardcore Ironman", HiscoreType.CURRENT_MODE.toString());
+	}
+
+	@Test
 	public void selectsCurrentModeHiscoresOnNormalWorlds()
 	{
 		assertEquals(HiscoreEndpoint.NORMAL,

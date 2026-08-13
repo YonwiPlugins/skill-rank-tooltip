@@ -237,6 +237,7 @@ public class SkillRankTooltipPlugin extends Plugin
 
 	private HiscoreType getSelectedHiscoreType(int accountType)
 	{
+		HiscoreType.setCurrentMode(accountType);
 		HiscoreType selected = config.hiscoreType();
 		if (isHiscoreTypeAvailable(selected, accountType))
 		{

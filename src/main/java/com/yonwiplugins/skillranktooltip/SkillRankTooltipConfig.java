@@ -12,7 +12,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "hiscoreType",
 		name = "Rank category",
-		description = "Your mode automatically uses this character's Main, Ironman, UIM, or HCIM hiscores",
+		description = "Use this character's account mode or a broader eligible rank category",
 		position = 0
 	)
 	default HiscoreType hiscoreType()
