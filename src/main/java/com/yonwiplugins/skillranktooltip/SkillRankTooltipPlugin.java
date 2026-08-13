@@ -2,6 +2,7 @@ package com.yonwiplugins.skillranktooltip;
 
 import com.google.inject.Provides;
 import java.util.Locale;
+import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -17,6 +18,7 @@ import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.hiscore.HiscoreClient;
 import net.runelite.client.hiscore.HiscoreEndpoint;
 import net.runelite.client.hiscore.HiscoreResult;
@@ -27,13 +29,14 @@ import net.runelite.client.util.QuantityFormatter;
 import net.runelite.client.util.Text;
 
 @PluginDescriptor(
-	name = "Skill Rank Tooltip",
+	name = "Skill Ranks",
 	description = "Shows your hiscore rank in skill tooltips",
 	tags = {"skills", "rank", "hiscore", "tooltip"}
 )
 @Slf4j
 public class SkillRankTooltipPlugin extends Plugin
 {
+	private static final String CONFIG_GROUP = "skill-rank-tooltip";
 	private static final int BACKGROUND_CHILD_INDEX = 0;
 	private static final int BORDER_CHILD_INDEX = 1;
 	private static final int LABEL_CHILD_INDEX = 2;
@@ -58,7 +61,10 @@ public class SkillRankTooltipPlugin extends Plugin
 	protected void startUp()
 	{
 		resetLookup();
-		requestHiscores();
+		if (config.showRanks())
+		{
+			requestHiscores();
+		}
 	}
 
 	@Override
@@ -78,7 +84,10 @@ public class SkillRankTooltipPlugin extends Plugin
 	{
 		if (event.getGameState() == GameState.LOGGED_IN)
 		{
-			requestHiscores();
+			if (config.showRanks())
+			{
+				requestHiscores();
+			}
 		}
 		else if (event.getGameState() == GameState.LOGIN_SCREEN
 			|| event.getGameState() == GameState.HOPPING)
@@ -90,7 +99,9 @@ public class SkillRankTooltipPlugin extends Plugin
 	@Subscribe
 	public void onGameTick(GameTick event)
 	{
-		if (client.getGameState() == GameState.LOGGED_IN && lookupUsername == null)
+		if (config.showRanks()
+			&& client.getGameState() == GameState.LOGGED_IN
+			&& lookupUsername == null)
 		{
 			requestHiscores();
 		}
@@ -115,8 +126,28 @@ public class SkillRankTooltipPlugin extends Plugin
 	}
 
 	@Subscribe
+	public void onConfigChanged(ConfigChanged event)
+	{
+		if (!CONFIG_GROUP.equals(event.getGroup()) || !"showRanks".equals(event.getKey()))
+		{
+			return;
+		}
+
+		resetLookup();
+		if (config.showRanks())
+		{
+			requestHiscores();
+		}
+	}
+
+	@Subscribe
 	public void onScriptPostFired(ScriptPostFired event)
 	{
+		if (!config.showRanks())
+		{
+			return;
+		}
+
 		HiscoreResult result = hiscoreResult;
 		if (result == null)
 		{
@@ -142,11 +173,15 @@ public class SkillRankTooltipPlugin extends Plugin
 			return;
 		}
 
+		if (!shouldShowRankForTooltip(labelWidget.getText(), config.hiddenSkills()))
+		{
+			return;
+		}
+
 		TooltipText update = buildTooltipText(
 			labelWidget.getText(),
 			valueWidget.getText(),
-			result,
-			config.showOverall());
+			result);
 		if (update == null)
 		{
 			return;
@@ -160,7 +195,9 @@ public class SkillRankTooltipPlugin extends Plugin
 
 	private void requestHiscores()
 	{
-		if (client.getGameState() != GameState.LOGGED_IN || lookupUsername != null)
+		if (!config.showRanks()
+			|| client.getGameState() != GameState.LOGGED_IN
+			|| lookupUsername != null)
 		{
 			return;
 		}
@@ -230,6 +267,17 @@ public class SkillRankTooltipPlugin extends Plugin
 		}
 	}
 
+	static boolean shouldShowRankForTooltip(String labelText, Set<Skill> hiddenSkills)
+	{
+		if (isTotalTooltip(labelText))
+		{
+			return true;
+		}
+
+		Skill skill = identifySkillFromTooltip(labelText);
+		return skill != null && (hiddenSkills == null || !hiddenSkills.contains(skill));
+	}
+
 	@SuppressWarnings("deprecation")
 	private static void resizeTooltip(Widget tooltip, Widget[] children, int addedHeight)
 	{
@@ -254,8 +302,7 @@ public class SkillRankTooltipPlugin extends Plugin
 	static TooltipText buildTooltipText(
 		String labelText,
 		String valueText,
-		HiscoreResult result,
-		boolean showOverall)
+		HiscoreResult result)
 	{
 		if (labelText == null || labelText.isEmpty() || labelText.contains(RANK_LABEL))
 		{
@@ -291,24 +338,13 @@ public class SkillRankTooltipPlugin extends Plugin
 			return null;
 		}
 
-		StringBuilder labels = new StringBuilder(labelText).append("<br>").append(RANK_LABEL);
-		StringBuilder values = new StringBuilder(valueText == null ? "" : valueText)
+		String labels = new StringBuilder(labelText).append("<br>").append(RANK_LABEL).toString();
+		String values = new StringBuilder(valueText == null ? "" : valueText)
 			.append("<br>")
-			.append(formatRank(skillData.getRank()));
-		int rows = 1;
+			.append(formatRank(skillData.getRank()))
+			.toString();
 
-		if (showOverall && hiscoreSkill != HiscoreSkill.OVERALL)
-		{
-			net.runelite.client.hiscore.Skill overall = result.getSkill(HiscoreSkill.OVERALL);
-			if (overall != null)
-			{
-				labels.append("<br>Overall rank:");
-				values.append("<br>").append(formatRank(overall.getRank()));
-				rows++;
-			}
-		}
-
-		return new TooltipText(labels.toString(), values.toString(), rows);
+		return new TooltipText(labels, values, 1);
 	}
 
 	static boolean isTotalTooltip(String text)
