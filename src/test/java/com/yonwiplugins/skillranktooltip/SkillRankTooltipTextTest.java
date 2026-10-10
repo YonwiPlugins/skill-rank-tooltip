@@ -14,6 +14,24 @@ import static org.junit.Assert.assertNull;
 public class SkillRankTooltipTextTest
 {
 	@Test
+	public void leavesTooltipThatFitsInPlace()
+	{
+		assertEquals(100, SkillRankTooltipPlugin.fitWithinParent(100, 50, 250));
+	}
+
+	@Test
+	public void movesOverflowingTooltipUp()
+	{
+		assertEquals(187, SkillRankTooltipPlugin.fitWithinParent(200, 63, 250));
+	}
+
+	@Test
+	public void neverMovesTooltipAboveParent()
+	{
+		assertEquals(0, SkillRankTooltipPlugin.fitWithinParent(10, 300, 250));
+	}
+
+	@Test
 	public void addsFormattedSkillRank()
 	{
 		HiscoreResult result = hiscores(HiscoreSkill.RANGED, 1_234_567, 42);
