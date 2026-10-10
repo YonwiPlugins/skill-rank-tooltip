@@ -319,6 +319,29 @@ public class SkillRankTooltipPlugin extends Plugin
 		tooltip.setHeight(tooltip.getHeight() + addedHeight);
 		resizeChild(children, BACKGROUND_CHILD_INDEX, addedHeight);
 		resizeChild(children, BORDER_CHILD_INDEX, addedHeight);
+
+		// The extra row can push tooltips for the bottom skill rows past the
+		// panel's edge, where they are clipped, so move them up to fit.
+		Widget parent = tooltip.getParent();
+		if (parent != null)
+		{
+			int y = fitWithinParent(tooltip.getRelativeY(), tooltip.getHeight(), parent.getHeight());
+			if (y != tooltip.getRelativeY())
+			{
+				tooltip.setRelativeY(y);
+			}
+		}
+	}
+
+	static int fitWithinParent(int y, int height, int parentHeight)
+	{
+		int overflow = y + height - parentHeight;
+		if (overflow <= 0)
+		{
+			return y;
+		}
+
+		return Math.max(0, y - overflow);
 	}
 
 	@SuppressWarnings("deprecation")
