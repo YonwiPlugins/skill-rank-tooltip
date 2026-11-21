@@ -114,52 +114,6 @@ public class SkillRankTooltipTextTest
 		assertEquals("Ultimate Ironman", HiscoreType.CURRENT_MODE.toString());
 		HiscoreType.setCurrentMode(3);
 		assertEquals("Hardcore Ironman", HiscoreType.CURRENT_MODE.toString());
-		HiscoreType.setCurrentMode(4);
-		assertEquals("Group Ironman", HiscoreType.CURRENT_MODE.toString());
-		HiscoreType.setCurrentMode(5);
-		assertEquals("Hardcore Group Ironman", HiscoreType.CURRENT_MODE.toString());
-		HiscoreType.setCurrentMode(6);
-		assertEquals("Unranked Group Ironman", HiscoreType.CURRENT_MODE.toString());
-		HiscoreType.setCurrentMode(0);
-	}
-
-	@Test
-	public void groupIronmenUseMainHiscores()
-	{
-		assertEquals(HiscoreEndpoint.NORMAL,
-			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 4, HiscoreType.CURRENT_MODE));
-		assertEquals(HiscoreEndpoint.NORMAL,
-			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 5, HiscoreType.CURRENT_MODE));
-		assertEquals(HiscoreEndpoint.NORMAL,
-			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 6, HiscoreType.CURRENT_MODE));
-	}
-
-	@Test
-	public void selectsSkillerAndOneDefenceHiscores()
-	{
-		for (int accountType = 0; accountType <= 6; accountType++)
-		{
-			assertEquals(true, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.SKILLER, accountType));
-			assertEquals(true, SkillRankTooltipPlugin.isHiscoreTypeAvailable(HiscoreType.PURE, accountType));
-			assertEquals(HiscoreEndpoint.LEVEL_3_SKILLER,
-				SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, accountType, HiscoreType.SKILLER));
-			assertEquals(HiscoreEndpoint.PURE,
-				SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, accountType, HiscoreType.PURE));
-		}
-
-		assertEquals("Skiller", HiscoreType.SKILLER.toString());
-		assertEquals("1 Defence", HiscoreType.PURE.toString());
-	}
-
-	@Test
-	public void worldHiscoresOverrideBuildCategories()
-	{
-		assertEquals(HiscoreEndpoint.HARDCORE_MAIN,
-			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.HARDCORE_MAIN, 0, HiscoreType.SKILLER));
-		assertEquals(HiscoreEndpoint.FRESH_START_WORLD,
-			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.FRESH_START_WORLD, 0, HiscoreType.PURE));
-		assertEquals(HiscoreEndpoint.DEADMAN,
-			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.DEADMAN, 0, HiscoreType.OVERALL));
 	}
 
 	@Test
@@ -226,6 +180,53 @@ public class SkillRankTooltipTextTest
 	{
 		assertEquals(false, SkillRankTooltipPlugin.isMaxedLevel(98));
 		assertEquals(true, SkillRankTooltipPlugin.isMaxedLevel(99));
+	}
+
+	@Test
+	public void selectsBuildHiscores()
+	{
+		assertEquals(HiscoreEndpoint.PURE,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 0, HiscoreType.PURE));
+		assertEquals(HiscoreEndpoint.LEVEL_3_SKILLER,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 1, HiscoreType.SKILLER));
+		// World-specific hiscores still win.
+		assertEquals(HiscoreEndpoint.HARDCORE_MAIN,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.HARDCORE_MAIN, 0, HiscoreType.PURE));
+	}
+
+	@Test
+	public void buildHiscoresFallBackToAccountMode()
+	{
+		assertEquals(HiscoreEndpoint.NORMAL,
+			SkillRankTooltipPlugin.fallbackEndpoint(HiscoreEndpoint.PURE, HiscoreEndpoint.NORMAL, 0));
+		assertEquals(HiscoreEndpoint.IRONMAN,
+			SkillRankTooltipPlugin.fallbackEndpoint(HiscoreEndpoint.LEVEL_3_SKILLER, HiscoreEndpoint.NORMAL, 1));
+		assertNull(SkillRankTooltipPlugin.fallbackEndpoint(HiscoreEndpoint.NORMAL, HiscoreEndpoint.NORMAL, 0));
+		assertNull(SkillRankTooltipPlugin.fallbackEndpoint(HiscoreEndpoint.IRONMAN, HiscoreEndpoint.NORMAL, 1));
+	}
+
+	@Test
+	public void worldHiscoresOverrideOtherCategories()
+	{
+		assertEquals(HiscoreEndpoint.HARDCORE_MAIN,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.HARDCORE_MAIN, 0, HiscoreType.SKILLER));
+		assertEquals(HiscoreEndpoint.FRESH_START_WORLD,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.FRESH_START_WORLD, 0, HiscoreType.PURE));
+		assertEquals(HiscoreEndpoint.DEADMAN,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.DEADMAN, 0, HiscoreType.OVERALL));
+	}
+
+	@Test
+	public void namesGroupIronmanModes()
+	{
+		HiscoreType.setCurrentMode(4);
+		assertEquals("Group Ironman", HiscoreType.CURRENT_MODE.toString());
+		HiscoreType.setCurrentMode(5);
+		assertEquals("Hardcore Group Ironman", HiscoreType.CURRENT_MODE.toString());
+		HiscoreType.setCurrentMode(6);
+		assertEquals("Unranked Group Ironman", HiscoreType.CURRENT_MODE.toString());
+		assertEquals(HiscoreEndpoint.NORMAL,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 5, HiscoreType.CURRENT_MODE));
 	}
 
 	@Test

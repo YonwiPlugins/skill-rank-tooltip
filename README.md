@@ -8,9 +8,10 @@ A RuneLite Plugin Hub plugin that adds your Old School RuneScape hiscore rank to
 - Shows overall rank when hovering Total level.
 - Displays `Unranked` when the hiscores do not provide a rank.
 - Uses the current account's matching hiscores automatically.
-- Shows the detected account mode by name and lets players switch to all-player, Skiller, or 1 Defence ranks.
-- Recognises Group Ironman and Hardcore Group Ironman accounts. Jagex only ranks these by group, so their individual ranks come from the main hiscores.
+- Shows the detected account mode by name and lets players switch to all-player ranks.
 - Supports Hardcore Main accounts, using the Hardcore Main hiscores.
+- Names Group Ironman, Hardcore Group Ironman and Unranked Group Ironman accounts. These use the normal hiscores, because Jagex's group hiscores rank whole groups rather than players.
+- Optional 1 Defence Pure and Level 3 Skiller rank categories. If the account isn't on that build's hiscores, the account mode's rank is shown instead.
 - Optional "Only level 99 skills" setting that hides the rank on skills below 99.
 - Provides one open "Show ranks for:" list with an enabled-by-default checkbox for every skill and Total level.
 - Supports normal, Hardcore Main, seasonal, tournament, Deadman, and Fresh Start worlds through RuneLite's built-in hiscore client.

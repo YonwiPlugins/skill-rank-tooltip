@@ -5,9 +5,9 @@ import net.runelite.client.hiscore.HiscoreEndpoint;
 public enum HiscoreType
 {
 	CURRENT_MODE("Main"),
-	OVERALL("All players"),
-	SKILLER("Skiller"),
-	PURE("1 Defence");
+	PURE("1 Defence Pure"),
+	SKILLER("Level 3 Skiller"),
+	OVERALL("All players");
 
 	private final String displayName;
 	private static volatile String currentModeDisplayName = "Main";
@@ -44,6 +44,8 @@ public enum HiscoreType
 				currentModeDisplayName = "Hardcore Ironman";
 				break;
 			case 4:
+				// Group Ironmen are ranked on the normal hiscores. Jagex's group
+				// hiscores rank whole groups, not individual players.
 				currentModeDisplayName = "Group Ironman";
 				break;
 			case 5:

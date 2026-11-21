@@ -12,7 +12,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "hiscoreType",
 		name = "Rank category",
-		description = "Use this character's account mode, all-player rankings, or the Skiller or 1 Defence hiscores. Hardcore Main, Leagues, Deadman, tournament and Fresh Start worlds always use their own hiscores.",
+		description = "Use this character's account mode, a build (1 Defence Pure or Level 3 Skiller), or all-player rankings. If you aren't on the build's hiscores, your account mode's rank is shown instead.",
 		position = 0
 	)
 	default HiscoreType hiscoreType()

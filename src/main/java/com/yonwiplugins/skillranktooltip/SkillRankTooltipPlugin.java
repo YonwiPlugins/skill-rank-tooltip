@@ -211,9 +211,21 @@ public class SkillRankTooltipPlugin extends Plugin
 			getSelectedHiscoreType(worldEndpoint, accountType));
 		lookupUsername = username;
 		lookupEndpoint = endpoint;
-		hiscoreClient.lookupAsync(username, endpoint).whenComplete((result, error) ->
+		HiscoreEndpoint fallback = fallbackEndpoint(endpoint, worldEndpoint, accountType);
+		lookup(username, endpoint, endpoint, fallback);
+	}
+
+	/**
+	 * Looks up {@code queryEndpoint}. If the player isn't on those hiscores and a
+	 * fallback is given, looks up the fallback instead. {@code requestedEndpoint}
+	 * is what the current lookup was started for, so stale results are dropped.
+	 */
+	private void lookup(String username, HiscoreEndpoint requestedEndpoint,
+		HiscoreEndpoint queryEndpoint, HiscoreEndpoint fallback)
+	{
+		hiscoreClient.lookupAsync(username, queryEndpoint).whenComplete((result, error) ->
 		{
-			if (!username.equals(lookupUsername) || endpoint != lookupEndpoint)
+			if (!username.equals(lookupUsername) || requestedEndpoint != lookupEndpoint)
 			{
 				return;
 			}
@@ -224,6 +236,13 @@ public class SkillRankTooltipPlugin extends Plugin
 				return;
 			}
 
+			if (result == null && fallback != null)
+			{
+				log.debug("{} is not on the {} hiscores, using {}", username, queryEndpoint, fallback);
+				lookup(username, requestedEndpoint, fallback, null);
+				return;
+			}
+
 			hiscoreResult = result;
 			if (result == null)
 			{
@@ -231,9 +250,25 @@ public class SkillRankTooltipPlugin extends Plugin
 			}
 			else
 			{
-				log.debug("Fetched hiscores for {}", username);
+				log.debug("Fetched {} hiscores for {}", queryEndpoint, username);
 			}
 		});
+	}
+
+	/**
+	 * Build hiscores (1 Defence Pure, Level 3 Skiller) only list accounts that
+	 * fit the build, and the client can't tell which build an account is. If
+	 * the player isn't listed there, fall back to their account mode's hiscores
+	 * so the tooltip still shows a rank.
+	 */
+	static HiscoreEndpoint fallbackEndpoint(HiscoreEndpoint endpoint, HiscoreEndpoint worldEndpoint, int accountType)
+	{
+		if (endpoint != HiscoreEndpoint.PURE && endpoint != HiscoreEndpoint.LEVEL_3_SKILLER)
+		{
+			return null;
+		}
+
+		return resolveHiscoreEndpoint(worldEndpoint, accountType, HiscoreType.CURRENT_MODE);
 	}
 
 	private void resetLookup()
@@ -263,8 +298,8 @@ public class SkillRankTooltipPlugin extends Plugin
 			case CURRENT_MODE:
 				return true;
 			case OVERALL:
-			case SKILLER:
 			case PURE:
+			case SKILLER:
 				return true;
 			default:
 				return false;
@@ -292,10 +327,10 @@ public class SkillRankTooltipPlugin extends Plugin
 		{
 			case OVERALL:
 				return HiscoreEndpoint.NORMAL;
-			case SKILLER:
-				return HiscoreEndpoint.LEVEL_3_SKILLER;
 			case PURE:
 				return HiscoreEndpoint.PURE;
+			case SKILLER:
+				return HiscoreEndpoint.LEVEL_3_SKILLER;
 			case CURRENT_MODE:
 			default:
 				break;
@@ -310,8 +345,7 @@ public class SkillRankTooltipPlugin extends Plugin
 			case 3:
 				return HiscoreEndpoint.HARDCORE_IRONMAN;
 			default:
-				// Jagex only ranks Group Ironman by group, so group members
-				// (including Hardcore Group Ironman) use the main hiscores.
+				// Jagex does not provide separate individual Group Ironman hiscores.
 				return HiscoreEndpoint.NORMAL;
 		}
 	}
