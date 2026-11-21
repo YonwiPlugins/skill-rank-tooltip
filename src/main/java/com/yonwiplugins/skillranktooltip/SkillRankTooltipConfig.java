@@ -12,7 +12,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "hiscoreType",
 		name = "Rank category",
-		description = "Use this character's account mode, a build (1 Defence Pure or Level 3 Skiller), or all-player rankings. If you aren't on the build's hiscores, your account mode's rank is shown instead.",
+		description = "Use this character's account mode, a build (1 Defence Pure or Level 3 Skiller), or all-player rankings. If you aren't on the build's hiscores, it switches back to your account mode.",
 		position = 0
 	)
 	default HiscoreType hiscoreType()

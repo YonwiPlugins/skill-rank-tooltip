@@ -497,8 +497,11 @@ public class SkillRankTooltipPlugin extends Plugin
 
 			if (result == null && fallback != null)
 			{
-				log.debug("{} is not on the {} hiscores, using {}", username, queryEndpoint, fallback);
-				lookup(username, requestedEndpoint, fallback, null);
+				// Not on that build's hiscores, so the build doesn't apply to this
+				// account: switch the setting back to the account mode. The
+				// resulting ConfigChanged starts a fresh lookup.
+				log.debug("{} is not on the {} hiscores, switching back to the account mode", username, queryEndpoint);
+				configManager.setConfiguration(CONFIG_GROUP, "hiscoreType", HiscoreType.CURRENT_MODE);
 				return;
 			}
 
