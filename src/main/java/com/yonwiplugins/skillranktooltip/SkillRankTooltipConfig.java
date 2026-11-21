@@ -39,7 +39,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showAllSkills",
 		name = "All skills",
-		description = "Ticks every skill under Individual skills. Unticking this puts back only the skills it ticked. Unticking a skill yourself turns this off and leaves the rest ticked. Close and reopen these settings to see the ticks change.",
+		description = "Ticks every skill under Individual skills. Unticking this puts back only the skills it ticked. Unticking a skill yourself turns this off and leaves the rest ticked. To see the ticks change, go back to the plugin list and reopen Skill Ranks.",
 		position = 8,
 		section = skillsSection
 	)
@@ -51,7 +51,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "showAll99s",
 		name = "All 99s",
-		description = "Ticks every skill you have at 99, and new 99s as you get them. Other ticks are left alone. Unticking this puts back only the 99s it ticked. Unticking one of your 99s yourself turns this off and leaves the rest ticked. Close and reopen these settings to see the ticks change.",
+		description = "Ticks every skill you have at 99, and new 99s as you get them. Other ticks are left alone. Unticking this puts back only the 99s it ticked. Unticking one of your 99s yourself turns this off and leaves the rest ticked. To see the ticks change, go back to the plugin list and reopen Skill Ranks.",
 		position = 9,
 		section = skillsSection
 	)
