@@ -20,24 +20,37 @@ public interface SkillRankTooltipConfig extends Config
 		return HiscoreType.CURRENT_MODE;
 	}
 
-	@ConfigItem(
-		keyName = "onlyMaxedSkills",
-		name = "Only level 99 skills",
-		description = "Only show a rank for skills at level 99. Total level keeps its rank.",
-		position = 1
+	@ConfigSection(
+		name = "Show ranks for:",
+		description = "Choose which skill tooltips show a rank",
+		position = 1,
+		closedByDefault = false
 	)
-	default boolean onlyMaxedSkills()
+	String skillsSection = "skills";
+
+	@ConfigItem(
+		keyName = "showAllSkills",
+		name = "All skills",
+		description = "Ticks every skill below. Unticking a skill turns this off. Close and reopen these settings to see the ticks change.",
+		position = 8,
+		section = skillsSection
+	)
+	default boolean showAllSkills()
 	{
 		return false;
 	}
 
-	@ConfigSection(
-		name = "Show ranks for:",
-		description = "Choose which skill tooltips show a rank",
-		position = 2,
-		closedByDefault = false
+	@ConfigItem(
+		keyName = "showAll99s",
+		name = "All 99s",
+		description = "Ticks every skill you have at 99, and new 99s as you get them. Other ticks are left alone. Unticking one of your 99s turns this off. Close and reopen these settings to see the ticks change.",
+		position = 9,
+		section = skillsSection
 	)
-	String skillsSection = "skills";
+	default boolean showAll99s()
+	{
+		return false;
+	}
 
 	@ConfigItem(
 		keyName = "showTotalLevel",

@@ -176,6 +176,34 @@ public class SkillRankTooltipTextTest
 	}
 
 	@Test
+	public void mapsEverySkillToItsCheckbox()
+	{
+		java.util.Set<String> configKeys = new java.util.HashSet<>();
+		for (java.lang.reflect.Method method : SkillRankTooltipConfig.class.getMethods())
+		{
+			net.runelite.client.config.ConfigItem item = method.getAnnotation(net.runelite.client.config.ConfigItem.class);
+			if (item != null)
+			{
+				configKeys.add(item.keyName());
+			}
+		}
+
+		for (Skill skill : SkillRankTooltipPlugin.SKILLS)
+		{
+			assertEquals(skill, SkillRankTooltipPlugin.skillForConfigKey(SkillRankTooltipPlugin.configKey(skill)));
+			// Every skill the plugin ticks must have a real checkbox.
+			assertEquals(true, configKeys.contains(SkillRankTooltipPlugin.configKey(skill)));
+		}
+
+		assertNull(SkillRankTooltipPlugin.skillForConfigKey("showOverall"));
+
+		assertEquals("showRunecraft", SkillRankTooltipPlugin.configKey(Skill.RUNECRAFT));
+		assertNull(SkillRankTooltipPlugin.skillForConfigKey("showTotalLevel"));
+		assertNull(SkillRankTooltipPlugin.skillForConfigKey("showAll99s"));
+		assertNull(SkillRankTooltipPlugin.skillForConfigKey("hiscoreType"));
+	}
+
+	@Test
 	public void onlyLevel99CountsAsMaxed()
 	{
 		assertEquals(false, SkillRankTooltipPlugin.isMaxedLevel(98));

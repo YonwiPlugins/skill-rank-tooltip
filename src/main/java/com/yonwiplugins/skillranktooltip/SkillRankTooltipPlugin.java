@@ -11,10 +11,12 @@ import net.runelite.api.Skill;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ScriptPostFired;
+import net.runelite.api.events.StatChanged;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.widgets.Widget;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -42,6 +44,12 @@ public class SkillRankTooltipPlugin extends Plugin
 	private static final int VALUE_CHILD_INDEX = 3;
 	private static final int TOOLTIP_ROW_HEIGHT = 13;
 	private static final String RANK_LABEL = "Rank:";
+	private static final String SHOW_ALL_SKILLS_KEY = "showAllSkills";
+	private static final String SHOW_ALL_99S_KEY = "showAll99s";
+	// Skill.OVERALL is deprecated and has no checkbox; Total level is separate.
+	static final Skill[] SKILLS = java.util.Arrays.stream(Skill.values())
+		.filter(skill -> !"Overall".equals(skill.getName()))
+		.toArray(Skill[]::new);
 
 	@Inject
 	private Client client;
@@ -54,6 +62,9 @@ public class SkillRankTooltipPlugin extends Plugin
 
 	@Inject
 	private ConfigManager configManager;
+
+	@Inject
+	private ClientThread clientThread;
 
 	private volatile HiscoreResult hiscoreResult;
 	private volatile String lookupUsername;
@@ -126,13 +137,116 @@ public class SkillRankTooltipPlugin extends Plugin
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event)
 	{
-		if (!CONFIG_GROUP.equals(event.getGroup()) || !"hiscoreType".equals(event.getKey()))
+		if (!CONFIG_GROUP.equals(event.getGroup()))
 		{
 			return;
 		}
 
-		resetLookup();
-		requestHiscores();
+		String key = event.getKey();
+		boolean ticked = "true".equals(event.getNewValue());
+		if ("hiscoreType".equals(key))
+		{
+			resetLookup();
+			requestHiscores();
+		}
+		else if (SHOW_ALL_SKILLS_KEY.equals(key))
+		{
+			if (ticked)
+			{
+				for (Skill skill : SKILLS)
+				{
+					setSkillTicked(skill, true);
+				}
+			}
+		}
+		else if (SHOW_ALL_99S_KEY.equals(key))
+		{
+			if (ticked)
+			{
+				clientThread.invoke(this::tickAll99s);
+			}
+		}
+		else if (!ticked)
+		{
+			Skill skill = skillForConfigKey(key);
+			if (skill != null)
+			{
+				onSkillUnticked(skill);
+			}
+		}
+	}
+
+	@Subscribe
+	public void onStatChanged(StatChanged event)
+	{
+		// Covers both logging in (every skill reports its level) and reaching
+		// a new 99 while "All 99s" is on.
+		if (config.showAll99s()
+			&& isMaxedLevel(event.getLevel())
+			&& !SkillRankTooltipConfig.showRankFor(config, event.getSkill()))
+		{
+			setSkillTicked(event.getSkill(), true);
+		}
+	}
+
+	private void tickAll99s()
+	{
+		if (client.getGameState() != GameState.LOGGED_IN)
+		{
+			// Levels aren't known yet; onStatChanged ticks them on login.
+			return;
+		}
+
+		for (Skill skill : SKILLS)
+		{
+			if (isMaxedLevel(client.getRealSkillLevel(skill)))
+			{
+				setSkillTicked(skill, true);
+			}
+		}
+	}
+
+	private void onSkillUnticked(Skill skill)
+	{
+		if (config.showAllSkills())
+		{
+			configManager.setConfiguration(CONFIG_GROUP, SHOW_ALL_SKILLS_KEY, false);
+		}
+
+		if (config.showAll99s())
+		{
+			clientThread.invoke(() ->
+			{
+				if (client.getGameState() == GameState.LOGGED_IN
+					&& isMaxedLevel(client.getRealSkillLevel(skill)))
+				{
+					configManager.setConfiguration(CONFIG_GROUP, SHOW_ALL_99S_KEY, false);
+				}
+			});
+		}
+	}
+
+	private void setSkillTicked(Skill skill, boolean ticked)
+	{
+		configManager.setConfiguration(CONFIG_GROUP, configKey(skill), ticked);
+	}
+
+	static String configKey(Skill skill)
+	{
+		return "show" + skill.getName().replace(" ", "");
+	}
+
+	static Skill skillForConfigKey(String key)
+	{
+		for (Skill skill : SKILLS)
+		{
+			if (configKey(skill).equals(key))
+			{
+				return skill;
+			}
+		}
+
+		return null;
 	}
 
 	@Subscribe
@@ -164,11 +278,6 @@ public class SkillRankTooltipPlugin extends Plugin
 		}
 
 		if (!shouldShowRankForTooltip(labelWidget.getText(), config))
-		{
-			return;
-		}
-
-		if (config.onlyMaxedSkills() && !isMaxedOrTotal(labelWidget.getText()))
 		{
 			return;
 		}
@@ -350,17 +459,6 @@ public class SkillRankTooltipPlugin extends Plugin
 		}
 	}
 
-	private boolean isMaxedOrTotal(String labelText)
-	{
-		if (isTotalTooltip(labelText))
-		{
-			return true;
-		}
-
-		Skill skill = identifySkillFromTooltip(labelText);
-		return skill != null && isMaxedLevel(client.getRealSkillLevel(skill));
-	}
-
 	static boolean isMaxedLevel(int realLevel)
 	{
 		return realLevel >= 99;
@@ -487,7 +585,7 @@ public class SkillRankTooltipPlugin extends Plugin
 		}
 
 		String plainText = Text.removeTags(text).trim().toLowerCase(Locale.ENGLISH);
-		for (Skill skill : Skill.values())
+		for (Skill skill : SKILLS)
 		{
 			if (plainText.startsWith(skill.getName().toLowerCase(Locale.ENGLISH)))
 			{
