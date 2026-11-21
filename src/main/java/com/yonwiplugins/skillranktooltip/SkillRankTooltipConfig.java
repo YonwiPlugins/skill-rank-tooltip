@@ -28,10 +28,18 @@ public interface SkillRankTooltipConfig extends Config
 	)
 	String skillsSection = "skills";
 
+	@ConfigSection(
+		name = "Individual skills",
+		description = "Choose which skills show a rank",
+		position = 2,
+		closedByDefault = false
+	)
+	String individualSkillsSection = "individualSkills";
+
 	@ConfigItem(
 		keyName = "showAllSkills",
 		name = "All skills",
-		description = "Ticks every skill below. Unticking this puts back only the skills it ticked. Unticking a skill yourself turns this off and leaves the rest ticked. Close and reopen these settings to see the ticks change.",
+		description = "Ticks every skill under Individual skills. Unticking this puts back only the skills it ticked. Unticking a skill yourself turns this off and leaves the rest ticked. Close and reopen these settings to see the ticks change.",
 		position = 8,
 		section = skillsSection
 	)
@@ -69,7 +77,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Attack",
 		description = "",
 		position = 11,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showAttack()
 	{
@@ -81,7 +89,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Defence",
 		description = "",
 		position = 12,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showDefence()
 	{
@@ -93,7 +101,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Strength",
 		description = "",
 		position = 13,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showStrength()
 	{
@@ -105,7 +113,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Hitpoints",
 		description = "",
 		position = 14,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showHitpoints()
 	{
@@ -117,7 +125,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Ranged",
 		description = "",
 		position = 15,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showRanged()
 	{
@@ -129,7 +137,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Prayer",
 		description = "",
 		position = 16,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showPrayer()
 	{
@@ -141,7 +149,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Magic",
 		description = "",
 		position = 17,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showMagic()
 	{
@@ -153,7 +161,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Cooking",
 		description = "",
 		position = 18,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showCooking()
 	{
@@ -165,7 +173,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Woodcutting",
 		description = "",
 		position = 19,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showWoodcutting()
 	{
@@ -177,7 +185,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Fletching",
 		description = "",
 		position = 20,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showFletching()
 	{
@@ -189,7 +197,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Fishing",
 		description = "",
 		position = 21,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showFishing()
 	{
@@ -201,7 +209,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Firemaking",
 		description = "",
 		position = 22,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showFiremaking()
 	{
@@ -213,7 +221,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Crafting",
 		description = "",
 		position = 23,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showCrafting()
 	{
@@ -225,7 +233,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Smithing",
 		description = "",
 		position = 24,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showSmithing()
 	{
@@ -237,7 +245,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Mining",
 		description = "",
 		position = 25,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showMining()
 	{
@@ -249,7 +257,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Herblore",
 		description = "",
 		position = 26,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showHerblore()
 	{
@@ -261,7 +269,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Agility",
 		description = "",
 		position = 27,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showAgility()
 	{
@@ -273,7 +281,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Thieving",
 		description = "",
 		position = 28,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showThieving()
 	{
@@ -285,7 +293,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Slayer",
 		description = "",
 		position = 29,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showSlayer()
 	{
@@ -297,7 +305,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Farming",
 		description = "",
 		position = 30,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showFarming()
 	{
@@ -309,7 +317,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Runecraft",
 		description = "",
 		position = 31,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showRunecraft()
 	{
@@ -321,7 +329,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Hunter",
 		description = "",
 		position = 32,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showHunter()
 	{
@@ -333,7 +341,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Construction",
 		description = "",
 		position = 33,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showConstruction()
 	{
@@ -345,7 +353,7 @@ public interface SkillRankTooltipConfig extends Config
 		name = "Sailing",
 		description = "",
 		position = 34,
-		section = skillsSection
+		section = individualSkillsSection
 	)
 	default boolean showSailing()
 	{
