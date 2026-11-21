@@ -274,13 +274,8 @@ public class SkillRankTooltipPlugin extends Plugin
 		int accountType,
 		HiscoreType hiscoreType)
 	{
-		if (worldEndpoint == HiscoreEndpoint.HARDCORE_MAIN)
-		{
-			// Hardcore Main is an account type with its own hiscores, so
-			// "All players" can still switch to the main hiscores.
-			return hiscoreType == HiscoreType.OVERALL ? HiscoreEndpoint.NORMAL : HiscoreEndpoint.HARDCORE_MAIN;
-		}
-
+		// Hardcore Main, Leagues, Deadman etc. have their own hiscores and are
+		// not ranked on the main ones, so "All players" can't apply to them.
 		if (worldEndpoint != HiscoreEndpoint.NORMAL)
 		{
 			return worldEndpoint;

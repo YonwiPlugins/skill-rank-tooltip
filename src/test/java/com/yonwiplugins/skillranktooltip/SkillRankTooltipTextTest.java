@@ -161,7 +161,8 @@ public class SkillRankTooltipTextTest
 	{
 		assertEquals(HiscoreEndpoint.HARDCORE_MAIN,
 			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.HARDCORE_MAIN, 0, HiscoreType.CURRENT_MODE));
-		assertEquals(HiscoreEndpoint.NORMAL,
+		// Hardcore Mains are not ranked on the main hiscores.
+		assertEquals(HiscoreEndpoint.HARDCORE_MAIN,
 			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.HARDCORE_MAIN, 0, HiscoreType.OVERALL));
 	}
 
