@@ -5,7 +5,9 @@ import net.runelite.client.hiscore.HiscoreEndpoint;
 public enum HiscoreType
 {
 	CURRENT_MODE("Main"),
-	OVERALL("All players");
+	OVERALL("All players"),
+	SKILLER("Skiller"),
+	PURE("1 Defence");
 
 	private final String displayName;
 	private static volatile String currentModeDisplayName = "Main";
@@ -40,6 +42,15 @@ public enum HiscoreType
 				break;
 			case 3:
 				currentModeDisplayName = "Hardcore Ironman";
+				break;
+			case 4:
+				currentModeDisplayName = "Group Ironman";
+				break;
+			case 5:
+				currentModeDisplayName = "Hardcore Group Ironman";
+				break;
+			case 6:
+				currentModeDisplayName = "Unranked Group Ironman";
 				break;
 			case 0:
 				currentModeDisplayName = "Main";

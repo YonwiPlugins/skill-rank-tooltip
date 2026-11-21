@@ -263,6 +263,8 @@ public class SkillRankTooltipPlugin extends Plugin
 			case CURRENT_MODE:
 				return true;
 			case OVERALL:
+			case SKILLER:
+			case PURE:
 				return true;
 			default:
 				return false;
@@ -290,6 +292,10 @@ public class SkillRankTooltipPlugin extends Plugin
 		{
 			case OVERALL:
 				return HiscoreEndpoint.NORMAL;
+			case SKILLER:
+				return HiscoreEndpoint.LEVEL_3_SKILLER;
+			case PURE:
+				return HiscoreEndpoint.PURE;
 			case CURRENT_MODE:
 			default:
 				break;
@@ -304,7 +310,8 @@ public class SkillRankTooltipPlugin extends Plugin
 			case 3:
 				return HiscoreEndpoint.HARDCORE_IRONMAN;
 			default:
-				// Jagex does not provide separate individual Group Ironman hiscores.
+				// Jagex only ranks Group Ironman by group, so group members
+				// (including Hardcore Group Ironman) use the main hiscores.
 				return HiscoreEndpoint.NORMAL;
 		}
 	}
