@@ -157,6 +157,107 @@ public class SkillRankTooltipTextTest
 	}
 
 	@Test
+	public void selectsHardcoreMainHiscores()
+	{
+		assertEquals(HiscoreEndpoint.HARDCORE_MAIN,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.HARDCORE_MAIN, 0, HiscoreType.CURRENT_MODE));
+		// Hardcore Mains are not ranked on the main hiscores.
+		assertEquals(HiscoreEndpoint.HARDCORE_MAIN,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.HARDCORE_MAIN, 0, HiscoreType.OVERALL));
+	}
+
+	@Test
+	public void namesHardcoreMainMode()
+	{
+		HiscoreType.setCurrentMode(HiscoreEndpoint.HARDCORE_MAIN, 0);
+		assertEquals("Hardcore Main", HiscoreType.CURRENT_MODE.toString());
+		HiscoreType.setCurrentMode(HiscoreEndpoint.NORMAL, 0);
+		assertEquals("Main", HiscoreType.CURRENT_MODE.toString());
+	}
+
+	@Test
+	public void mapsEverySkillToItsCheckbox()
+	{
+		java.util.Set<String> configKeys = new java.util.HashSet<>();
+		for (java.lang.reflect.Method method : SkillRankTooltipConfig.class.getMethods())
+		{
+			net.runelite.client.config.ConfigItem item = method.getAnnotation(net.runelite.client.config.ConfigItem.class);
+			if (item != null)
+			{
+				configKeys.add(item.keyName());
+			}
+		}
+
+		for (Skill skill : SkillRankTooltipPlugin.SKILLS)
+		{
+			assertEquals(skill, SkillRankTooltipPlugin.skillForConfigKey(SkillRankTooltipPlugin.configKey(skill)));
+			// Every skill the plugin ticks must have a real checkbox.
+			assertEquals(true, configKeys.contains(SkillRankTooltipPlugin.configKey(skill)));
+		}
+
+		assertNull(SkillRankTooltipPlugin.skillForConfigKey("showOverall"));
+
+		assertEquals("showRunecraft", SkillRankTooltipPlugin.configKey(Skill.RUNECRAFT));
+		assertNull(SkillRankTooltipPlugin.skillForConfigKey("showTotalLevel"));
+		assertNull(SkillRankTooltipPlugin.skillForConfigKey("showAll99s"));
+		assertNull(SkillRankTooltipPlugin.skillForConfigKey("hiscoreType"));
+	}
+
+	@Test
+	public void onlyLevel99CountsAsMaxed()
+	{
+		assertEquals(false, SkillRankTooltipPlugin.isMaxedLevel(98));
+		assertEquals(true, SkillRankTooltipPlugin.isMaxedLevel(99));
+	}
+
+	@Test
+	public void selectsBuildHiscores()
+	{
+		assertEquals(HiscoreEndpoint.PURE,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 0, HiscoreType.PURE));
+		assertEquals(HiscoreEndpoint.LEVEL_3_SKILLER,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 1, HiscoreType.SKILLER));
+		// World-specific hiscores still win.
+		assertEquals(HiscoreEndpoint.HARDCORE_MAIN,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.HARDCORE_MAIN, 0, HiscoreType.PURE));
+	}
+
+	@Test
+	public void buildHiscoresFallBackToAccountMode()
+	{
+		assertEquals(HiscoreEndpoint.NORMAL,
+			SkillRankTooltipPlugin.fallbackEndpoint(HiscoreEndpoint.PURE, HiscoreEndpoint.NORMAL, 0));
+		assertEquals(HiscoreEndpoint.IRONMAN,
+			SkillRankTooltipPlugin.fallbackEndpoint(HiscoreEndpoint.LEVEL_3_SKILLER, HiscoreEndpoint.NORMAL, 1));
+		assertNull(SkillRankTooltipPlugin.fallbackEndpoint(HiscoreEndpoint.NORMAL, HiscoreEndpoint.NORMAL, 0));
+		assertNull(SkillRankTooltipPlugin.fallbackEndpoint(HiscoreEndpoint.IRONMAN, HiscoreEndpoint.NORMAL, 1));
+	}
+
+	@Test
+	public void worldHiscoresOverrideOtherCategories()
+	{
+		assertEquals(HiscoreEndpoint.HARDCORE_MAIN,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.HARDCORE_MAIN, 0, HiscoreType.SKILLER));
+		assertEquals(HiscoreEndpoint.FRESH_START_WORLD,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.FRESH_START_WORLD, 0, HiscoreType.PURE));
+		assertEquals(HiscoreEndpoint.DEADMAN,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.DEADMAN, 0, HiscoreType.OVERALL));
+	}
+
+	@Test
+	public void namesGroupIronmanModes()
+	{
+		HiscoreType.setCurrentMode(4);
+		assertEquals("Group Ironman", HiscoreType.CURRENT_MODE.toString());
+		HiscoreType.setCurrentMode(5);
+		assertEquals("Hardcore Group Ironman", HiscoreType.CURRENT_MODE.toString());
+		HiscoreType.setCurrentMode(6);
+		assertEquals("Unranked Group Ironman", HiscoreType.CURRENT_MODE.toString());
+		assertEquals(HiscoreEndpoint.NORMAL,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.NORMAL, 5, HiscoreType.CURRENT_MODE));
+	}
+
+	@Test
 	public void keepsWorldSpecificHiscores()
 	{
 		assertEquals(HiscoreEndpoint.SEASONAL,

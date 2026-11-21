@@ -12,7 +12,7 @@ public interface SkillRankTooltipConfig extends Config
 	@ConfigItem(
 		keyName = "hiscoreType",
 		name = "Rank category",
-		description = "Use this character's account mode or all-player rankings",
+		description = "Use this character's account mode, a build (1 Defence Pure or Level 3 Skiller), or all-player rankings. If you aren't on the build's hiscores, your account mode's rank is shown instead.",
 		position = 0
 	)
 	default HiscoreType hiscoreType()
@@ -27,6 +27,30 @@ public interface SkillRankTooltipConfig extends Config
 		closedByDefault = false
 	)
 	String skillsSection = "skills";
+
+	@ConfigItem(
+		keyName = "showAllSkills",
+		name = "All skills",
+		description = "Ticks every skill below. Unticking a skill turns this off. Close and reopen these settings to see the ticks change.",
+		position = 8,
+		section = skillsSection
+	)
+	default boolean showAllSkills()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "showAll99s",
+		name = "All 99s",
+		description = "Ticks every skill you have at 99, and new 99s as you get them. Other ticks are left alone. Unticking one of your 99s turns this off. Close and reopen these settings to see the ticks change.",
+		position = 9,
+		section = skillsSection
+	)
+	default boolean showAll99s()
+	{
+		return false;
+	}
 
 	@ConfigItem(
 		keyName = "showTotalLevel",
