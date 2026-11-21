@@ -110,10 +110,12 @@ public class SkillRankTooltipPlugin extends Plugin
 			return;
 		}
 
+		HiscoreEndpoint worldEndpoint = HiscoreEndpoint.fromWorldTypes(client.getWorldType());
+		int accountType = client.getVarbitValue(VarbitID.IRONMAN);
 		HiscoreEndpoint endpoint = resolveHiscoreEndpoint(
-			HiscoreEndpoint.fromWorldTypes(client.getWorldType()),
-			client.getVarbitValue(VarbitID.IRONMAN),
-			getSelectedHiscoreType(client.getVarbitValue(VarbitID.IRONMAN)));
+			worldEndpoint,
+			accountType,
+			getSelectedHiscoreType(worldEndpoint, accountType));
 		if (endpoint != lookupEndpoint)
 		{
 			resetLookup();
@@ -166,6 +168,11 @@ public class SkillRankTooltipPlugin extends Plugin
 			return;
 		}
 
+		if (config.onlyMaxedSkills() && !isMaxedOrTotal(labelWidget.getText()))
+		{
+			return;
+		}
+
 		TooltipText update = buildTooltipText(
 			labelWidget.getText(),
 			valueWidget.getText(),
@@ -196,11 +203,12 @@ public class SkillRankTooltipPlugin extends Plugin
 			return;
 		}
 
+		HiscoreEndpoint worldEndpoint = HiscoreEndpoint.fromWorldTypes(client.getWorldType());
 		int accountType = client.getVarbitValue(VarbitID.IRONMAN);
 		HiscoreEndpoint endpoint = resolveHiscoreEndpoint(
-			HiscoreEndpoint.fromWorldTypes(client.getWorldType()),
+			worldEndpoint,
 			accountType,
-			getSelectedHiscoreType(accountType));
+			getSelectedHiscoreType(worldEndpoint, accountType));
 		lookupUsername = username;
 		lookupEndpoint = endpoint;
 		hiscoreClient.lookupAsync(username, endpoint).whenComplete((result, error) ->
@@ -235,9 +243,9 @@ public class SkillRankTooltipPlugin extends Plugin
 		hiscoreResult = null;
 	}
 
-	private HiscoreType getSelectedHiscoreType(int accountType)
+	private HiscoreType getSelectedHiscoreType(HiscoreEndpoint worldEndpoint, int accountType)
 	{
-		HiscoreType.setCurrentMode(accountType);
+		HiscoreType.setCurrentMode(worldEndpoint, accountType);
 		HiscoreType selected = config.hiscoreType();
 		if (isHiscoreTypeAvailable(selected, accountType))
 		{
@@ -266,6 +274,13 @@ public class SkillRankTooltipPlugin extends Plugin
 		int accountType,
 		HiscoreType hiscoreType)
 	{
+		if (worldEndpoint == HiscoreEndpoint.HARDCORE_MAIN)
+		{
+			// Hardcore Main is an account type with its own hiscores, so
+			// "All players" can still switch to the main hiscores.
+			return hiscoreType == HiscoreType.OVERALL ? HiscoreEndpoint.NORMAL : HiscoreEndpoint.HARDCORE_MAIN;
+		}
+
 		if (worldEndpoint != HiscoreEndpoint.NORMAL)
 		{
 			return worldEndpoint;
@@ -297,6 +312,22 @@ public class SkillRankTooltipPlugin extends Plugin
 				// Jagex does not provide separate individual Group Ironman hiscores.
 				return HiscoreEndpoint.NORMAL;
 		}
+	}
+
+	private boolean isMaxedOrTotal(String labelText)
+	{
+		if (isTotalTooltip(labelText))
+		{
+			return true;
+		}
+
+		Skill skill = identifySkillFromTooltip(labelText);
+		return skill != null && isMaxedLevel(client.getRealSkillLevel(skill));
+	}
+
+	static boolean isMaxedLevel(int realLevel)
+	{
+		return realLevel >= 99;
 	}
 
 	static boolean shouldShowRankForTooltip(String labelText, SkillRankTooltipConfig config)

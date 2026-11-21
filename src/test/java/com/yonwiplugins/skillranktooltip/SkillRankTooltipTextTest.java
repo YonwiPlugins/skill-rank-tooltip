@@ -157,6 +157,31 @@ public class SkillRankTooltipTextTest
 	}
 
 	@Test
+	public void selectsHardcoreMainHiscores()
+	{
+		assertEquals(HiscoreEndpoint.HARDCORE_MAIN,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.HARDCORE_MAIN, 0, HiscoreType.CURRENT_MODE));
+		assertEquals(HiscoreEndpoint.NORMAL,
+			SkillRankTooltipPlugin.resolveHiscoreEndpoint(HiscoreEndpoint.HARDCORE_MAIN, 0, HiscoreType.OVERALL));
+	}
+
+	@Test
+	public void namesHardcoreMainMode()
+	{
+		HiscoreType.setCurrentMode(HiscoreEndpoint.HARDCORE_MAIN, 0);
+		assertEquals("Hardcore Main", HiscoreType.CURRENT_MODE.toString());
+		HiscoreType.setCurrentMode(HiscoreEndpoint.NORMAL, 0);
+		assertEquals("Main", HiscoreType.CURRENT_MODE.toString());
+	}
+
+	@Test
+	public void onlyLevel99CountsAsMaxed()
+	{
+		assertEquals(false, SkillRankTooltipPlugin.isMaxedLevel(98));
+		assertEquals(true, SkillRankTooltipPlugin.isMaxedLevel(99));
+	}
+
+	@Test
 	public void keepsWorldSpecificHiscores()
 	{
 		assertEquals(HiscoreEndpoint.SEASONAL,

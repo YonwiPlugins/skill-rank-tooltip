@@ -20,10 +20,21 @@ public interface SkillRankTooltipConfig extends Config
 		return HiscoreType.CURRENT_MODE;
 	}
 
+	@ConfigItem(
+		keyName = "onlyMaxedSkills",
+		name = "Only level 99 skills",
+		description = "Only show a rank for skills at level 99. Total level keeps its rank.",
+		position = 1
+	)
+	default boolean onlyMaxedSkills()
+	{
+		return false;
+	}
+
 	@ConfigSection(
 		name = "Show ranks for:",
 		description = "Choose which skill tooltips show a rank",
-		position = 1,
+		position = 2,
 		closedByDefault = false
 	)
 	String skillsSection = "skills";

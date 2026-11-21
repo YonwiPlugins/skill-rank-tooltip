@@ -9,8 +9,10 @@ A RuneLite Plugin Hub plugin that adds your Old School RuneScape hiscore rank to
 - Displays `Unranked` when the hiscores do not provide a rank.
 - Uses the current account's matching hiscores automatically.
 - Shows the detected account mode by name and lets players switch to all-player ranks.
+- Supports Hardcore Main accounts, using the Hardcore Main hiscores.
+- Optional "Only level 99 skills" setting that hides the rank on skills below 99.
 - Provides one open "Show ranks for:" list with an enabled-by-default checkbox for every skill and Total level.
-- Supports normal, seasonal, tournament, Deadman, and Fresh Start worlds through RuneLite's built-in hiscore client.
+- Supports normal, Hardcore Main, seasonal, tournament, Deadman, and Fresh Start worlds through RuneLite's built-in hiscore client.
 
 The plugin performs one hiscore lookup after login and caches the result for the session. The lookup sends the logged-in character name to Jagex's official Old School RuneScape hiscores service through RuneLite's built-in hiscore client.
 

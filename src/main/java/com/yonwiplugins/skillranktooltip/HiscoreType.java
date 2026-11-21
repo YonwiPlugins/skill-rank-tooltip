@@ -1,5 +1,7 @@
 package com.yonwiplugins.skillranktooltip;
 
+import net.runelite.client.hiscore.HiscoreEndpoint;
+
 public enum HiscoreType
 {
 	CURRENT_MODE("Main"),
@@ -15,6 +17,19 @@ public enum HiscoreType
 
 	static void setCurrentMode(int accountType)
 	{
+		setCurrentMode(HiscoreEndpoint.NORMAL, accountType);
+	}
+
+	static void setCurrentMode(HiscoreEndpoint worldEndpoint, int accountType)
+	{
+		if (worldEndpoint != null && worldEndpoint != HiscoreEndpoint.NORMAL)
+		{
+			// Hardcore Main, Leagues, Deadman etc. come from the world type and
+			// have their own hiscores, so name the mode after them.
+			currentModeDisplayName = worldEndpoint.getName();
+			return;
+		}
+
 		switch (accountType)
 		{
 			case 1:
