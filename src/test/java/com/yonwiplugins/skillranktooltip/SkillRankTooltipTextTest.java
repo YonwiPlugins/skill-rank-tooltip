@@ -204,6 +204,18 @@ public class SkillRankTooltipTextTest
 	}
 
 	@Test
+	public void remembersWhichSkillsAMasterTicked()
+	{
+		java.util.Set<Skill> skills = java.util.EnumSet.of(Skill.ATTACK, Skill.SAILING);
+		String stored = SkillRankTooltipPlugin.formatSkillList(skills);
+		assertEquals("ATTACK,SAILING", stored);
+		assertEquals(skills, SkillRankTooltipPlugin.parseSkillList(stored));
+		assertEquals(java.util.EnumSet.of(Skill.MAGIC), SkillRankTooltipPlugin.parseSkillList("MAGIC,NOT_A_SKILL"));
+		assertEquals(true, SkillRankTooltipPlugin.parseSkillList(null).isEmpty());
+		assertEquals(true, SkillRankTooltipPlugin.parseSkillList("").isEmpty());
+	}
+
+	@Test
 	public void onlyLevel99CountsAsMaxed()
 	{
 		assertEquals(false, SkillRankTooltipPlugin.isMaxedLevel(98));
